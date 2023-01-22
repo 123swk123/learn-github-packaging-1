@@ -24,7 +24,8 @@ jobs:
         ls -ls
         cd ..
         echo $PWD
-        echo $ROOT_DIR
+        echo 'ROOT_DIR=$ROOT_DIR'
+        echo 'BUILD_DIR=$BUILD_DIR'
         ls -ls
         tree -a
         env
@@ -32,5 +33,7 @@ jobs:
 
     - name: Building
       run: |
+        cd $GITHUB_WORKSPACE
         gcc -o $BUILD_DIR/test entry.c
+
       
