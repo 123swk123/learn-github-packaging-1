@@ -66,6 +66,7 @@ jobs:
 
     - name: Building
       run: |
+        export PKG_CONFIG_PATH="$SYSROOT$PREFIX/lib/pkgconfig:$SYSROOT$PREFIX/share/pkgconfig"
         cd $BUILD_USB1_DIR
         $LIBUSB1_SRC/configure --build=`$LIBUSB1_SRC/config.guess` --with-sysroot=$SYSROOT --prefix=$PREFIX
         make -j
