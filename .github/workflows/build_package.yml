@@ -72,7 +72,7 @@ jobs:
     - name: Building
       env:
         PKG_CONFIG_DIR: ""
-        PKG_CONFIG_PATH: ""
+        # PKG_CONFIG_PATH: ""
       run: |
         export PKG_CONFIG_LIBDIR="$SYSROOT$PREFIX/lib/pkgconfig:$SYSROOT$PREFIX/share/pkgconfig:$SYSROOT$PREFIX/lib/x86_64-linux-gnu/pkgconfig"
         export PKG_CONFIG_SYSROOT_DIR=$SYSROOT
@@ -99,7 +99,8 @@ jobs:
         ./bootstrap
         cd $BUILD_HIDAPI_DIR
         $HIDAPI_SRC/configure --build=`$HIDAPI_SRC/config.guess` --with-sysroot=$SYSROOT --prefix=$PREFIX
-        make -j
+        cat config.log
+        make -n
         make install DESTDIR=$SYSROOT
 
         cd $SYSROOT
