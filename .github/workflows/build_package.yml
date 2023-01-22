@@ -98,9 +98,9 @@ jobs:
         cd $HIDAPI_SRC
         ./bootstrap
         cd $BUILD_HIDAPI_DIR
-        $HIDAPI_SRC/configure --build=`$HIDAPI_SRC/config.guess` --with-sysroot=$SYSROOT --prefix=$PREFIX
+        LDFLAGS=-L$SYSROOT$PREFIX/lib $HIDAPI_SRC/configure --build=`$HIDAPI_SRC/config.guess` --with-sysroot=$SYSROOT --prefix=$PREFIX
         cat config.log
-        make -n
+        make -j
         make install DESTDIR=$SYSROOT
 
         cd $SYSROOT
