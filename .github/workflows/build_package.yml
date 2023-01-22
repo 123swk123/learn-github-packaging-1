@@ -48,9 +48,9 @@ jobs:
 
     - name: Download dependencies
       run: |
-        cd $SYSROOT
+        cd $DOWNLOAD_DIR
         apt download libudev1 libudev-dev
-        find . -iname '*.deb' -exec dpkg -x '{}' . \;
+        find . -iname '*.deb' -exec dpkg -x '{}' $SYSROOT \;
 
         cd $ROOT_DIR
         tree -a
