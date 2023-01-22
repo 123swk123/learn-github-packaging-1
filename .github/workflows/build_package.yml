@@ -12,8 +12,9 @@ jobs:
 
     - name: Environment setup
       run: |
-        echo 'ROOT_DIR=$PWD'>> $GITHUB_ENV
-        echo 'BUILD_DIR=$PWD/build'>> $GITHUB_ENV
+        cat $GITHUB_ENV
+        echo "ROOT_DIR=$PWD" >> $GITHUB_ENV
+        echo "BUILD_DIR=$PWD/build" >> $GITHUB_ENV
 
     - name: pre-requisite installation
       run: |
