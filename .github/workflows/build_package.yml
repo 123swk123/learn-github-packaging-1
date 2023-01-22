@@ -13,11 +13,13 @@ jobs:
     - name: Environment setup
       run: |
         cat $GITHUB_ENV
+        cd ..
         echo "ROOT_DIR=$PWD" >> $GITHUB_ENV
         echo "BUILD_DIR=$PWD/build" >> $GITHUB_ENV
 
     - name: pre-requisite installation
       run: |
+        mkdir -p $BUILD_DIR
         sudo apt-get update
         sudo apt-get install tree autotools-dev autoconf automake libtool pkg-config cmake texinfo texlive
 
@@ -27,11 +29,12 @@ jobs:
         ls -ls
         cd ..
         echo $PWD
-        echo 'ROOT_DIR=$ROOT_DIR'
-        echo 'BUILD_DIR=$BUILD_DIR'
+        echo ROOT_DIR=$ROOT_DIR
+        echo BUILD_DIR=$BUILD_DIR
         ls -ls
         tree -a
         env
+        echo "github environment file: $GITHUB_ENV"
         cat $GITHUB_ENV
         gcc --version
 
