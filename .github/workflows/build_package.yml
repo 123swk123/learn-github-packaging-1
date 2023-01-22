@@ -1,0 +1,25 @@
+name: Compile & Package
+
+on:
+  workflow_dispatch:
+
+jobs:
+  publish-docs:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: checkout
+      uses: actions/checkout@v3
+
+    - name: pre-requisite installation
+      run: |
+        sudo apt-get update
+        sudo apt-get install tree autotools-dev autoconf automake libtool pkg-config cmake texinfo texlive
+
+    - name: Folders listing
+      run: |
+        echo $PWD
+        ls -ls
+        cd ..
+        echo $PWD
+        ls -ls
+        tree -a
