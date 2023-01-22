@@ -51,6 +51,7 @@ jobs:
         cd $DOWNLOAD_DIR
         apt download libudev1 libudev-dev
         find . -iname '*.deb' -exec dpkg -x '{}' $SYSROOT \;
+        sudo dpkg -i *.deb
 
         cd $ROOT_DIR
         tree -a
