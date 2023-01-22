@@ -47,24 +47,24 @@ jobs:
         sudo apt-get install tree autotools-dev autoconf automake libtool pkg-config cmake texinfo texlive
 
     - name: Download dependencies
-        run: |
-          cd $ROOT_DIR
-          tree -a
-          cd $DOWNLOAD_DIR
+      run: |
+        cd $ROOT_DIR
+        tree -a
+        cd $DOWNLOAD_DIR
 
-          wget "https://github.com/libusb/libusb/releases/download/v${LIBUSB1_VER}/libusb-${LIBUSB1_VER}.tar.bz2"
-          tar -xjf libusb-${LIBUSB1_VER}.tar.bz2
+        wget "https://github.com/libusb/libusb/releases/download/v${LIBUSB1_VER}/libusb-${LIBUSB1_VER}.tar.bz2"
+        tar -xjf libusb-${LIBUSB1_VER}.tar.bz2
 
-          wget "http://www.intra2net.com/en/developer/libftdi/download/libftdi1-${LIBFTDI_VER}.tar.bz2"
-          tar -xjf libftdi1-${LIBFTDI_VER}.tar.bz2
+        wget "http://www.intra2net.com/en/developer/libftdi/download/libftdi1-${LIBFTDI_VER}.tar.bz2"
+        tar -xjf libftdi1-${LIBFTDI_VER}.tar.bz2
 
-          wget "https://github.com/aquynh/capstone/archive/${CAPSTONE_VER}.tar.gz"
-          tar -xzf ${CAPSTONE_VER}.tar.gz
+        wget "https://github.com/aquynh/capstone/archive/${CAPSTONE_VER}.tar.gz"
+        tar -xzf ${CAPSTONE_VER}.tar.gz
 
-          wget "https://github.com/libusb/hidapi/archive/hidapi-${HIDAPI_VER}.tar.gz"
-          tar -xzf hidapi-${HIDAPI_VER}.tar.gz
-          cd hidapi-hidapi-${HIDAPI_VER}
-          ./bootstrap
+        wget "https://github.com/libusb/hidapi/archive/hidapi-${HIDAPI_VER}.tar.gz"
+        tar -xzf hidapi-${HIDAPI_VER}.tar.gz
+        cd hidapi-hidapi-${HIDAPI_VER}
+        ./bootstrap
 
     - name: Building
       run: |
