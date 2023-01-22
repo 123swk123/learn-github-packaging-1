@@ -67,10 +67,11 @@ jobs:
     - name: Building
       env:
         PKG_CONFIG_DIR: ""
-        PKG_CONFIG_LIBDIR: ${SYSROOT}${PREFIX}/lib/pkgconfig:${SYSROOT}${PREFIX}/share/pkgconfig
-        PKG_CONFIG_SYSROOT_DIR: ${SYSROOT}
       run: |
+        export PKG_CONFIG_LIBDIR=$SYSROOT$PREFIX/lib/pkgconfig:$SYSROOT$PREFIX/share/pkgconfig
+        export PKG_CONFIG_SYSROOT_DIR=$SYSROOT
         # export PKG_CONFIG_PATH="$SYSROOT$PREFIX/lib/pkgconfig:$SYSROOT$PREFIX/share/pkgconfig"
+        
         cd $BUILD_USB1_DIR
         $LIBUSB1_SRC/configure --build=`$LIBUSB1_SRC/config.guess` --with-sysroot=$SYSROOT --prefix=$PREFIX
         make -j
