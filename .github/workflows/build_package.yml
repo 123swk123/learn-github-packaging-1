@@ -71,12 +71,18 @@ jobs:
         make -j
         make install DESTDIR=$SYSROOT
 
+        cd $SYSROOT
+        tree -a
+
         cd $HIDAPI_SRC
         ./bootstrap
         cd $BUILD_HIDAPI_DIR
         $HIDAPI_SRC/configure --build=`$HIDAPI_SRC/config.guess` --with-sysroot=$SYSROOT --prefix=$PREFIX
         make -j
         make install DESTDIR=$SYSROOT
+
+        cd $SYSROOT
+        tree -a
 
         cd $BUILD_CAPSTONE_DIR
         tar -xzf $DOWNLOAD_DIR/${CAPSTONE_VER}.tar.gz
