@@ -44,7 +44,7 @@ jobs:
       run: |
         mkdir -p $BUILD_DIR $DOWNLOAD_DIR $BUILD_USB1_DIR $BUILD_HIDAPI_DIR $BUILD_FTDI_DIR $BUILD_CAPSTONE_DIR $BUILD_OPENOCD_DIR
         sudo apt-get update
-        sudo apt-get install tree autotools-dev autoconf automake libtool pkg-config cmake texinfo texlive
+        sudo apt-get install tree autotools-dev autoconf automake libtool libudev-dev pkg-config cmake texinfo texlive
 
     - name: Download dependencies
       run: |
