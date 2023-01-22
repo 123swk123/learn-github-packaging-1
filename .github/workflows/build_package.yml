@@ -3,9 +3,19 @@ name: Compile & Package
 on:
   workflow_dispatch:
 
+# default working directory for every jobs set to checkout dir
+# /home/runner/work/<git dir>/<checkout git dir> <== default working directory
+
 jobs:
   build-package:
     runs-on: ubuntu-20.04
+    env:
+      LIBUSB1_VER: 1.0.26
+      HIDAPI_VER: 0.11.2
+      LIBFTDI_VER: 1.5
+      CAPSTONE_VER: 5.0-rc2
+      PREFIX: '/usr'
+
     steps:
     - name: checkout
       uses: actions/checkout@v3
@@ -16,31 +26,62 @@ jobs:
         cd ..
         echo "ROOT_DIR=$PWD" >> $GITHUB_ENV
         echo "BUILD_DIR=$PWD/build" >> $GITHUB_ENV
+        echo "DOWNLOAD_DIR=$PWD/download" >> $GITHUB_ENV
+        echo "SYSROOT=$PWD/root" >> $GITHUB_ENV
+
+        echo "LIBUSB1_SRC=$PWD/download/libusb-${LIBUSB1_VER}" >> $GITHUB_ENV
+        echo "HIDAPI_SRC=$PWD/download/" >> $GITHUB_ENV
+        echo "LIBFTDI_SRC=$PWD/download/libftdi1-${LIBFTDI_VER}" >> $GITHUB_ENV
+        echo "CAPSTONE_SRC=$PWD/download/capstone-${CAPSTONE_VER}" >> $GITHUB_ENV
+
+        echo "BUILD_USB1_DIR=$PWD/build/libusb1" >> $GITHUB_ENV
+        echo "BUILD_HIDAPI_DIR=$PWD/build/hidapi" >> $GITHUB_ENV
+        echo "BUILD_FTDI_DIR=$PWD/build/libftdi" >> $GITHUB_ENV
+        echo "BUILD_CAPSTONE_DIR=$PWD/build/capstone" >> $GITHUB_ENV
+        echo "BUILD_OPENOCD_DIR=$PWD/build/openocd" >> $GITHUB_ENV
 
     - name: pre-requisite installation
       run: |
-        mkdir -p $BUILD_DIR
+        mkdir -p $BUILD_DIR $DOWNLOAD_DIR $BUILD_USB1_DIR $BUILD_HIDAPI_DIR $BUILD_FTDI_DIR $BUILD_CAPSTONE_DIR $BUILD_OPENOCD_DIR
         sudo apt-get update
         sudo apt-get install tree autotools-dev autoconf automake libtool pkg-config cmake texinfo texlive
 
-    - name: Folders listing
-      run: |
-        echo $PWD
-        ls -ls
-        cd ..
-        echo $PWD
-        echo ROOT_DIR=$ROOT_DIR
-        echo BUILD_DIR=$BUILD_DIR
-        ls -ls
-        tree -a
-        env
-        echo "github environment file: $GITHUB_ENV"
-        cat $GITHUB_ENV
-        gcc --version
+    - name: Download dependencies
+        run: |
+          cd $ROOT_DIR
+          tree -a
+          cd $DOWNLOAD_DIR
+
+          wget "https://github.com/libusb/libusb/releases/download/v${LIBUSB1_VER}/libusb-${LIBUSB1_VER}.tar.bz2"
+          tar -xjf libusb-${LIBUSB1_VER}.tar.bz2
+
+          wget "http://www.intra2net.com/en/developer/libftdi/download/libftdi1-${LIBFTDI_VER}.tar.bz2"
+          tar -xjf libftdi1-${LIBFTDI_VER}.tar.bz2
+
+          wget "https://github.com/aquynh/capstone/archive/${CAPSTONE_VER}.tar.gz"
+          tar -xzf ${CAPSTONE_VER}.tar.gz
+
+          wget "https://github.com/libusb/hidapi/archive/hidapi-${HIDAPI_VER}.tar.gz"
+          tar -xzf hidapi-${HIDAPI_VER}.tar.gz
+          cd hidapi-hidapi-${HIDAPI_VER}
+          ./bootstrap
 
     - name: Building
       run: |
+        cd $BUILD_USB1_DIR
+        $LIBUSB1_SRC/configure --build=`$LIBUSB1_SRC/config.guess` --with-sysroot=$SYSROOT --prefix=$PREFIX
+        make -j
+        make install DESTDIR=$SYSROOT
+
+        cd $BUILD_HIDAPI_DIR
+        $HIDAPI_SRC/configure --build=`$HIDAPI_SRC/config.guess` --with-sysroot=$SYSROOT --prefix=$PREFIX
+        make -j
+        make install DESTDIR=$SYSROOT
+
+        cd $BUILD_CAPSTONE_DIR
+        cp -r $CAPSTONE_SRC/* .
+        make install DESTDIR=$SYSROOT PREFIX=$PREFIX
+
         cd $GITHUB_WORKSPACE
         gcc -o $BUILD_DIR/test entry.c
 
-      
