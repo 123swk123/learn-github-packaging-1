@@ -9,8 +9,7 @@ on:
         required: true
         type: string
       release_append:
-        description: 'Should I append to existing release?'
-        default: 'false'
+        description: 'Should I append to existing release ${{ inputs.release_tag }}?'
         required: true
         type: boolean
 
