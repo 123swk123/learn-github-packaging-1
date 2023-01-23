@@ -10,6 +10,7 @@ on:
         type: string
       release_append:
         description: 'Should I append to existing release?'
+        default: true
         required: true
         type: boolean
 
