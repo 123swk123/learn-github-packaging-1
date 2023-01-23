@@ -116,7 +116,7 @@ jobs:
         sed -i '/^libdir=/d' $capstonepc
         sed -i '/^includedir=/d' $capstonepc
         sed -i '/^archive=/d' $capstonepc
-        sed -i '1s;^;prefix=/usr\nexec_prefix=${prefix}\nlibdir=${exec_prefix}/lib\nincludedir=${prefix}/include/capstone\n\n;' $capstonepc
+        sed -i '1s;^;prefix=/usr\nexec_prefix=${prefix}/bin\nlibdir=${prefix}/lib\nincludedir=${prefix}/include/capstone\n\n;' $capstonepc
 
         cd $GITHUB_WORKSPACE
         gcc -o $BUILD_DIR/test entry.c
