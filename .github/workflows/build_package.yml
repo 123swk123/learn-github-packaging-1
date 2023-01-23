@@ -132,11 +132,22 @@ jobs:
         name: test-package
         path: ${{ env.ARTIFACT_PATH }}
 
+    # - name: Release the package
+    #   uses: marvinpinto/action-automatic-releases@latest
+    #   with:
+    #     title: "test builds on main branch ${{ env.RELEASE_NAME }}"
+    #     automatic_release_tag: "latest"
+    #     prerelease: ${{ env.IS_PRE_RELEASE }}
+    #     repo_token: ${{ secrets.ACCESS_TOKEN }}
+    #     files: ${{ env.ARTIFACT_PATH }}
+
     - name: Release the package
-      uses: marvinpinto/action-automatic-releases@latest
+      uses: ncipollo/release-action@v1
       with:
-        title: "test builds on main branch ${{ env.RELEASE_NAME }}"
-        automatic_release_tag: "latest"
-        prerelease: true
-        repo_token: ${{ secrets.ACCESS_TOKEN }}
-        files: ${{ env.ARTIFACT_PATH }}
+        name: "test builds on main branch ${{ env.RELEASE_NAME }}"
+        allowUpdates: false
+        prerelease: ${{ env.IS_PRE_RELEASE }}
+        commit: main  # use the branch name
+        tag: ${{ env.RELEASE_NAME }}
+        token: ${{ secrets.ACCESS_TOKEN }}
+        artifacts: ${{ env.ARTIFACT_PATH }}
