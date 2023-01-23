@@ -131,6 +131,6 @@ jobs:
         echo "ARTIFACT_PATH=$PWD/$ARTIFACT" >> $GITHUB_ENV
 
     - name: Publish packages
-        uses: actions/upload-artifact@v3
-        with:
-          path: ${{ env.ARTIFACT_PATH }}
+      uses: actions/upload-artifact@v3
+      with:
+        path: ${{ env.ARTIFACT_PATH }}
