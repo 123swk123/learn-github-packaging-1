@@ -117,6 +117,8 @@ jobs:
         cd $GITHUB_WORKSPACE
         gcc -o $BUILD_DIR/test entry.c
 
+    - name: Publish packages
+      run: |
         GIT_TAG="`git tag --points-at HEAD`"
         [ -z $GIT_TAG ] && GIT_TAG="`git rev-parse --short HEAD`"
         # check if there is tag pointing at HEAD, if so the release will have the same name as the tag,
@@ -125,13 +127,12 @@ jobs:
         [ -z $RELEASE_NAME ] && RELEASE_NAME="latest"
         [[ $RELEASE_NAME = "latest" ]] && IS_PRE_RELEASE="true" || IS_PRE_RELEASE="false"
         ARTIFACT="pkg-${GIT_TAG}-ubuntu-$(lsb_release -r|cut -f2).tar.xz"
-        cd $SYSROOT$PREFIX
-        tar -cJ -I'xz -zeT0 -9' -f $ARTIFACT *
+        (cd $SYSROOT$PREFIX; tar -c) | xz -zeT0 -9 > $ROOT_DIR/$ARTIFACT
         echo "RELEASE_NAME=$RELEASE_NAME" >> $GITHUB_ENV
         echo "IS_PRE_RELEASE=$IS_PRE_RELEASE" >> $GITHUB_ENV
-        echo "ARTIFACT_PATH=$PWD/$ARTIFACT" >> $GITHUB_ENV
+        echo "ARTIFACT_PATH=$ROOT_DIR/$ARTIFACT" >> $GITHUB_ENV
 
-    - name: Publish packages
       uses: actions/upload-artifact@v3
       with:
+        name: test-package
         path: ${{ env.ARTIFACT_PATH }}
