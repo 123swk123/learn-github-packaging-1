@@ -138,6 +138,7 @@ jobs:
         name: test-package
         path: ${{ env.ARTIFACT_PATH }}
 
+# this release action has some depreceated github api usage
     # - name: Release the package
     #   uses: marvinpinto/action-automatic-releases@latest
     #   with:
