@@ -2,6 +2,11 @@ name: Compile & Package
 
 on:
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'whats the tag name you want for this release?'
+        required: true
+        type: string
 
 # default working directory for every jobs set to checkout dir
 # /home/runner/work/<git dir>/<checkout git dir> <== default working directory
@@ -22,6 +27,7 @@ jobs:
 
     - name: Environment setup
       run: |
+        echo "Release tag name: ${{ inputs.release_tag }}"
         cat $GITHUB_ENV
         cd ..
         echo "ROOT_DIR=$PWD" >> $GITHUB_ENV
@@ -148,6 +154,6 @@ jobs:
         allowUpdates: false
         prerelease: ${{ env.IS_PRE_RELEASE }}
         commit: main  # use the branch name
-        tag: ${{ env.RELEASE_NAME }}
+        tag: ${{ inputs.release_tag }}
         token: ${{ secrets.ACCESS_TOKEN }}
         artifacts: ${{ env.ARTIFACT_PATH }}
