@@ -11,7 +11,7 @@ on:
 
       release_append:
         description: 'Should I append to release:${{ inputs.release_tag }}?'
-        default: false
+        default: 'false'
         required: true
         type: boolean
 
