@@ -9,6 +9,12 @@ on:
         required: true
         type: string
 
+        release_append:
+        description: 'Should I append to release:${{ inputs.release_tag }}?'
+        default: false
+        required: true
+        type: boolean
+
 # default working directory for every jobs set to checkout dir
 # /home/runner/work/<git dir>/<checkout git dir> <== default working directory
 
@@ -162,7 +168,7 @@ jobs:
       with:
         name: "test builds on main branch ${{ inputs.release_tag }}"
         # use this to append artifacts to existing release
-        allowUpdates: true
+        allowUpdates: ${{ inputs.release_append }}
         prerelease: ${{ env.IS_PRE_RELEASE }}
         commit: main  # use branch name
         tag: ${{ inputs.release_tag }}
