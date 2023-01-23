@@ -112,12 +112,16 @@ jobs:
         cd $BUILD_CAPSTONE_DIR
         tar -xzf $DOWNLOAD_DIR/${CAPSTONE_VER}.tar.gz --strip-components=1
         make install DESTDIR=$SYSROOT PREFIX=$PREFIX CAPSTONE_BUILD_CORE_ONLY=yes CAPSTONE_STATIC=yes CAPSTONE_SHARED=no
-        cat $SYSROOT$PREFIX/lib/pkgconfig/capstone.pc
+        capstonepc=$SYSROOT$PREFIX/lib/pkgconfig/capstone.pc
+        sed -i '/^libdir=/d' $capstonepc
+        sed -i '/^includedir=/d' $capstonepc
+        sed -i '/^archive=/d' $capstonepc
+        sed -i '1s;^;prefix=/usr\nexec_prefix=${prefix}\nlibdir=${exec_prefix}/lib\nincludedir=${prefix}/include/capstone\n\n;' $capstonepc
 
         cd $GITHUB_WORKSPACE
         gcc -o $BUILD_DIR/test entry.c
 
-        tree -a $SYSROOT
+        tree -ah $SYSROOT
 
     - name: Publish packages step 1
       run: |
