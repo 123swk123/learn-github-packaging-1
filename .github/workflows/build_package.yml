@@ -159,7 +159,7 @@ jobs:
     - name: Release the package
       uses: ncipollo/release-action@v1
       with:
-        name: "test builds on main branch ${{ env.RELEASE_NAME }}"
+        name: "test builds on main branch ${{ inputs.release_tag }}"
         allowUpdates: false
         prerelease: ${{ env.IS_PRE_RELEASE }}
         commit: main  # use the branch name
