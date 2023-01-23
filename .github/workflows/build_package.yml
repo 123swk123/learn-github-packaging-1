@@ -85,7 +85,6 @@ jobs:
         make -j
         make install DESTDIR=$SYSROOT
 
-        cat ./usr/lib/pkgconfig/libusb-1.0.pc
         pkg-config --variable pc_path pkg-config
         pkg-config --exists --print-errors libusb-1.0
         pkg-config --variable=includedir libusb-1.0
@@ -122,7 +121,7 @@ jobs:
         ARTIFACT="pkg-${GIT_TAG}-ubuntu-$(lsb_release -r|cut -f2).tar.xz"
 
         (cd $SYSROOT$PREFIX; tar -c) | xz -zeT0 -9 > $ROOT_DIR/$ARTIFACT
-        
+
         echo "RELEASE_NAME=$RELEASE_NAME" >> $GITHUB_ENV
         echo "IS_PRE_RELEASE=$IS_PRE_RELEASE" >> $GITHUB_ENV
         echo "ARTIFACT_PATH=$ROOT_DIR/$ARTIFACT" >> $GITHUB_ENV
