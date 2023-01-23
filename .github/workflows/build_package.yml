@@ -5,6 +5,7 @@ on:
     inputs:
       release_tag:
         description: 'whats the tag name you want for this release?'
+        default: 'latest'
         required: true
         type: string
 
