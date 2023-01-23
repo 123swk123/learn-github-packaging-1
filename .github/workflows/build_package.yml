@@ -160,7 +160,7 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         name: "test builds on main branch ${{ inputs.release_tag }}"
-        # use this to overwrite the existing release
+        # use this to append artifacts to existing release
         allowUpdates: true
         prerelease: ${{ env.IS_PRE_RELEASE }}
         commit: main  # use branch name
