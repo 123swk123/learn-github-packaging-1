@@ -133,7 +133,10 @@ jobs:
         path: ${{ env.ARTIFACT_PATH }}
 
     - name: Release the package
-      uses: softprops/action-gh-release@v1
+      uses: marvinpinto/action-automatic-releases@latest
       with:
+        title: "test builds on main branch ${{ env.RELEASE_NAME }}"
+        automatic_release_tag: "latest"
         prerelease: true
+        repo_token: ${{ secrets.ACCESS_TOKEN }}
         files: ${{ env.ARTIFACT_PATH }}
