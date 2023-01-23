@@ -117,15 +117,16 @@ jobs:
         cd $GITHUB_WORKSPACE
         gcc -o $BUILD_DIR/test entry.c
 
-        OPENOCD_TAG="`git tag --points-at HEAD`"
-        [ -z $OPENOCD_TAG ] && OPENOCD_TAG="`git rev-parse --short HEAD`"
+        GIT_TAG="`git tag --points-at HEAD`"
+        [ -z $GIT_TAG ] && GIT_TAG="`git rev-parse --short HEAD`"
         # check if there is tag pointing at HEAD, if so the release will have the same name as the tag,
         # otherwise it will be named 'latest'
         RELEASE_NAME="`git tag --points-at HEAD`"
         [ -z $RELEASE_NAME ] && RELEASE_NAME="latest"
         [[ $RELEASE_NAME = "latest" ]] && IS_PRE_RELEASE="true" || IS_PRE_RELEASE="false"
-        ARTIFACT="pkg-${OPENOCD_TAG}-$(lsb_release -r|cut -f2).tar.xz"
-        tar -cJf -I'xz -zeT0 -9' $ARTIFACT -C $SYSROOT$PREFIX *
+        ARTIFACT="pkg-${GIT_TAG}-ubuntu-$(lsb_release -r|cut -f2).tar.xz"
+        cd $SYSROOT$PREFIX
+        tar -cJf -I'xz -zeT0 -9' $ARTIFACT *
         echo "RELEASE_NAME=$RELEASE_NAME" >> $GITHUB_ENV
         echo "IS_PRE_RELEASE=$IS_PRE_RELEASE" >> $GITHUB_ENV
         echo "ARTIFACT_PATH=$PWD/$ARTIFACT" >> $GITHUB_ENV
