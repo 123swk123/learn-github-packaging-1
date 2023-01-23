@@ -131,3 +131,9 @@ jobs:
       with:
         name: test-package
         path: ${{ env.ARTIFACT_PATH }}
+
+    - name: Release the package
+      uses: softprops/action-gh-release@v1
+      with:
+        prerelease: true
+        files: ${{ env.ARTIFACT_PATH }}
