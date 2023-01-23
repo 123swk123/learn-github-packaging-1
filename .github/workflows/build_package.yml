@@ -85,9 +85,6 @@ jobs:
         make -j
         make install DESTDIR=$SYSROOT
 
-        cd $SYSROOT
-        tree -a
-
         cat ./usr/lib/pkgconfig/libusb-1.0.pc
         pkg-config --variable pc_path pkg-config
         pkg-config --exists --print-errors libusb-1.0
@@ -103,21 +100,17 @@ jobs:
         make -j
         make install DESTDIR=$SYSROOT
 
-        cd $SYSROOT
-        tree -a
-
         cd $BUILD_CAPSTONE_DIR
         tar -xzf $DOWNLOAD_DIR/${CAPSTONE_VER}.tar.gz --strip-components=1
         make all
         make install DESTDIR=$SYSROOT PREFIX=$PREFIX
 
-        cd $SYSROOT
-        tree -a
-
         cd $GITHUB_WORKSPACE
         gcc -o $BUILD_DIR/test entry.c
 
-    - name: Publish packages
+        tree -a $SYSROOT
+
+    - name: Publish packages step 1
       run: |
         GIT_TAG="`git tag --points-at HEAD`"
         [ -z $GIT_TAG ] && GIT_TAG="`git rev-parse --short HEAD`"
@@ -127,11 +120,14 @@ jobs:
         [ -z $RELEASE_NAME ] && RELEASE_NAME="latest"
         [[ $RELEASE_NAME = "latest" ]] && IS_PRE_RELEASE="true" || IS_PRE_RELEASE="false"
         ARTIFACT="pkg-${GIT_TAG}-ubuntu-$(lsb_release -r|cut -f2).tar.xz"
+
         (cd $SYSROOT$PREFIX; tar -c) | xz -zeT0 -9 > $ROOT_DIR/$ARTIFACT
+        
         echo "RELEASE_NAME=$RELEASE_NAME" >> $GITHUB_ENV
         echo "IS_PRE_RELEASE=$IS_PRE_RELEASE" >> $GITHUB_ENV
         echo "ARTIFACT_PATH=$ROOT_DIR/$ARTIFACT" >> $GITHUB_ENV
 
+    - name: Publish packages step 2
       uses: actions/upload-artifact@v3
       with:
         name: test-package
