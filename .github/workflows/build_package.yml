@@ -100,15 +100,19 @@ jobs:
         cd $HIDAPI_SRC
         ./bootstrap
         cd $BUILD_HIDAPI_DIR
-        LDFLAGS=-L$SYSROOT$PREFIX/lib $HIDAPI_SRC/configure --build=`$HIDAPI_SRC/config.guess` --with-sysroot=$SYSROOT --prefix=$PREFIX
+        LDFLAGS=-L$SYSROOT$PREFIX/lib $HIDAPI_SRC/configure --build=`$HIDAPI_SRC/config.guess` --with-sysroot=$SYSROOT --prefix=$PREFIX --disable-shared
         cat config.log
         make -j
         make install DESTDIR=$SYSROOT
 
+        cd $BUILD_FTDI_DIR
+        cmake -DSTATICLIBS=ON -DEXAMPLES=OFF -DFTDI_EEPROM=OFF -DCMAKE_INSTALL_PREFIX=PREFIX $LIBFTDI_SRC
+        make install DESTDIR=$SYSROOT
+
         cd $BUILD_CAPSTONE_DIR
         tar -xzf $DOWNLOAD_DIR/${CAPSTONE_VER}.tar.gz --strip-components=1
-        make all
-        make install DESTDIR=$SYSROOT PREFIX=$PREFIX
+        make install DESTDIR=$SYSROOT PREFIX=$PREFIX CAPSTONE_BUILD_CORE_ONLY=yes CAPSTONE_STATIC=yes CAPSTONE_SHARED=no
+        cat $SYSROOT$PREFIX/lib/pkgconfig/capstone.pc
 
         cd $GITHUB_WORKSPACE
         gcc -o $BUILD_DIR/test entry.c
